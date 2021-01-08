@@ -1,11 +1,15 @@
-import React from "react"
+import React, { Component } from "react"
 import { Container, Jumbotron, Card, Row } from 'react-bootstrap';
 
-export default function Home() {
+class Home extends Component {
 
-    return (
-        <Container>
-            Home
-        </Container>
-    )
+    render() {
+        return (
+            <Container>
+                Home
+            </Container>
+        )
+    }
 }
+
+export default Home
