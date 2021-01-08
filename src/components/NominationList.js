@@ -1,11 +1,15 @@
-import React from "react"
+import React, { Component } from "react"
 import { Container, Jumbotron, Card, Row } from 'react-bootstrap';
 
-export default function NominationList() {
+class NominationList extends Component {
 
-    return (
-        <Container>
-            NominationList
-        </Container>
-    )
+    render() {
+        return (
+            <Container>
+                NominationList
+            </Container>
+        )
+    }
 }
+
+export default NominationList
