@@ -12,6 +12,7 @@ import SignUp from "./components/SignUp"
 import { config } from "./Constants";
 
 const API_Users = config.url.API_Users
+const API_Nominations = config.url.API_Nominations
 
 class App extends Component {
   constructor() {
@@ -28,7 +29,7 @@ class App extends Component {
     if (token) {
       this.userFetch(token)
     } else {
-      this.breweryFetch()
+      this.nominationFetch()
     }
   }
 
@@ -52,13 +53,38 @@ class App extends Component {
   }
 
   nominationFetch = () => {
-    console.log('-------------------------')
+    console.log('++++++++++++++++++++++++')
   }
 
   loginUser = (userObj) => {
     this.setState({
       user: userObj
     })
+  }
+
+  nominateMovie = movie => {
+    if (this.state.user.id) {
+      const newNomination = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: movie.Title,
+          year: movie.Year,
+          user_id: this.state.user.id
+        })
+      }
+      fetch(API_Nominations, newNomination)
+        .then(resp => resp.json())
+        .then(data => {
+          this.setState({
+            nominations: data.nominations,
+            movies: data.movies
+          })
+        })
+        .catch(err => console.log(err))
+    }
   }
 
   render() {
@@ -68,7 +94,8 @@ class App extends Component {
         <div>
           <Navbar />
           <Switch>
-            <Route exact path='/' render={routerProps => <Home {...routerProps} />} />
+            <Route exact path='/' render={routerProps => <Home {...routerProps}
+              nominateMovie={this.nominateMovie} />} />
             <Route exact path='/list' render={routerProps => <NominationList {...routerProps} />} />
             <Route exact path='/login' render={routerProps => <Login {...routerProps}
               loginUser={this.loginUser} />} />
