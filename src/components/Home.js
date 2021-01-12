@@ -1,8 +1,6 @@
 import React, { Component } from "react"
 import { Container, Form, Row, Col, Button, Card, Modal } from 'react-bootstrap';
 
-import { API_Key } from "../Constants";
-
 class Home extends Component {
 
     constructor() {
@@ -22,7 +20,7 @@ class Home extends Component {
 
     searchMovies = event => {
         event.preventDefault()
-        fetch(`http://www.omdbapi.com/?apikey=${API_Key}&t=${this.state.movieSearch}`)
+        fetch(`http://www.omdbapi.com/?apikey=a51950c&t=${this.state.movieSearch}`)
             .then(resp => resp.json())
             .then(data => {
                 this.setState({
