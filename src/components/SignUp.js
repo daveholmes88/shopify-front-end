@@ -1,8 +1,6 @@
 import React, { Component } from "react"
 import { Container, Row, Col, Form, Button, Modal } from 'react-bootstrap';
 
-import { config } from "../Constants";
-
 class SignUp extends Component {
     constructor() {
         super()
