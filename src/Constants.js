@@ -1,8 +1,8 @@
 const prod = {
     url: {
-        API_Movies: 'https://tranquil-earth-85240.herokuapp.com/movies',
-        API_Nominations: 'https://tranquil-earth-85240.herokuapp.com/nominations',
-        API_Users: 'https://tranquil-earth-85240.herokuapp.com/users',
+        API_Movies: 'dave-holmes-shopify-back-end.herokuapp.com/movies',
+        API_Nominations: 'dave-holmes-shopify-back-end.herokuapp.com/nominations',
+        API_Users: 'dave-holmes-shopify-back-end.herokuapp.com/users',
     }
 }
 
