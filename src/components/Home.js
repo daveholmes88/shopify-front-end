@@ -20,7 +20,7 @@ class Home extends Component {
 
     searchMovies = event => {
         event.preventDefault()
-        fetch(`http://www.omdbapi.com/?apikey=a51950c&t=${this.state.movieSearch}`)
+        fetch(`https://www.omdbapi.com/?apikey=a51950c&t=${this.state.movieSearch}`)
             .then(resp => resp.json())
             .then(data => {
                 this.setState({
