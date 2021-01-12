@@ -16,4 +16,4 @@ const dev = {
 
 export const config = process.env.NODE_ENV === "development" ? dev : prod
 
-export const API_Key = "a51950c"
+export const API_Key = 'a51950c'
