@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import { Container, Form, Col, Row, Button, Modal } from 'react-bootstrap';
-import { config } from "../Constants";
 
 class Login extends Component {
 
