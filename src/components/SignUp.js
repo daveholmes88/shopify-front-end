@@ -3,8 +3,6 @@ import { Container, Row, Col, Form, Button, Modal } from 'react-bootstrap';
 
 import { config } from "../Constants";
 
-const API_Users = config.url.API_Users
-
 class SignUp extends Component {
     constructor() {
         super()
@@ -45,7 +43,7 @@ class SignUp extends Component {
                     password: this.state.password
                 })
             }
-            fetch(API_Users, newUser)
+            fetch('https://dave-holmes-shopify-back-end.herokuapp.com/users', newUser)
                 .then(resp => resp.json())
                 .then(data => {
                     console.log(data)

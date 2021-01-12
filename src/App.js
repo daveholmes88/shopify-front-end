@@ -8,11 +8,6 @@ import NominationList from "./components/NominationList"
 import Login from "./components/Login"
 import SignUp from "./components/SignUp"
 
-import { config } from "./Constants";
-
-const API_Users = config.url.API_Users
-const API_Nominations = config.url.API_Nominations
-
 class App extends Component {
   constructor() {
     super()
@@ -42,7 +37,7 @@ class App extends Component {
         "Authorization": `Bearer ${token}`
       }
     }
-    fetch(API_Users, reqObj)
+    fetch('https://dave-holmes-shopify-back-end.herokuapp.com/users', reqObj)
       .then(resp => resp.json())
       .then(data => {
         this.setState({
@@ -56,7 +51,7 @@ class App extends Component {
   }
 
   nominationFetch = () => {
-    fetch(API_Nominations)
+    fetch('https://dave-holmes-shopify-back-end.herokuapp.com/nominations')
       .then(resp => resp.json())
       .then(data => {
         this.setState({
@@ -88,7 +83,7 @@ class App extends Component {
             user_id: this.state.user.id
           })
         }
-        fetch(API_Nominations, newNomination)
+        fetch('https://dave-holmes-shopify-back-end.herokuapp.com/nominations', newNomination)
           .then(resp => resp.json())
           .then(data => {
             this.setState({
@@ -127,7 +122,7 @@ class App extends Component {
         user_id: this.state.user.id
       })
     }
-    fetch(`${API_Nominations}/${nom[0].id}`, deleteNomination)
+    fetch(`https://dave-holmes-shopify-back-end.herokuapp.com/nominations/${nom[0].id}`, deleteNomination)
       .then(resp => resp.json())
       .then(data => {
         this.setState({

@@ -2,8 +2,6 @@ import React, { Component } from "react"
 import { Container, Form, Col, Row, Button, Modal } from 'react-bootstrap';
 import { config } from "../Constants";
 
-const API_Users = config.url.API_Users
-
 class Login extends Component {
 
     constructor(props) {
@@ -45,7 +43,7 @@ class Login extends Component {
                     password: this.state.password,
                 }),
             };
-            fetch(`${API_Users}/1`, reqUser)
+            fetch(`https://dave-holmes-shopify-back-end.herokuapp.com/users/1`, reqUser)
                 .then((resp) => resp.json())
                 .then((data) => {
                     if (data.error) {
