@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { Router, Route, Switch } from 'react-router-dom'
-import history from "./history"
+import { Route, Switch } from 'react-router-dom'
 import './App.css';
 
 import Home from "./components/Home"
@@ -20,7 +19,10 @@ class App extends Component {
     this.state = {
       nominations: [],
       movies: [],
-      user: {}
+      user: {},
+      myMovies: [],
+      noUserModal: false,
+      nominationNumberModal: false
     }
   }
 
@@ -46,64 +48,145 @@ class App extends Component {
         this.setState({
           user: data.user,
           nominations: data.nominations,
-          movies: data.movies
+          movies: data.movies,
+          myMovies: data.my_movies
         })
       })
       .catch(err => console.log(err))
   }
 
   nominationFetch = () => {
-    console.log('++++++++++++++++++++++++')
+    fetch(API_Nominations)
+      .then(resp => resp.json())
+      .then(data => {
+        this.setState({
+          nominations: data.nominations,
+          movies: data.movies
+        })
+      })
   }
 
-  loginUser = (userObj) => {
+  loginUser = (userObj, movies) => {
+    console.log(this.props)
     this.setState({
-      user: userObj
+      user: userObj,
+      myMovies: movies,
     })
   }
 
   nominateMovie = movie => {
     if (this.state.user.id) {
-      const newNomination = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          title: movie.Title,
-          year: movie.Year,
-          user_id: this.state.user.id
+      if (this.state.myMovies.length < 5) {
+        const newNomination = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title: movie.Title,
+            year: movie.Year,
+            user_id: this.state.user.id
+          })
+        }
+        fetch(API_Nominations, newNomination)
+          .then(resp => resp.json())
+          .then(data => {
+            this.setState({
+              nominations: data.nominations,
+              movies: data.movies,
+              myMovies: data.my_movies
+            })
+          })
+          .catch(err => console.log(err))
+      } else {
+        this.setState({
+          nominationNumberModal: true
         })
       }
-      fetch(API_Nominations, newNomination)
-        .then(resp => resp.json())
-        .then(data => {
-          this.setState({
-            nominations: data.nominations,
-            movies: data.movies
-          })
-        })
-        .catch(err => console.log(err))
+    } else {
+      this.setState({
+        noUserModal: true
+      })
     }
   }
 
+  removeNomination = (movie) => {
+    const movieNoms = this.state.nominations.filter(nomination => {
+      return nomination.movie_id === movie.id
+    })
+    const nom = movieNoms.filter(nomination => {
+      return nomination.user_id === this.state.user.id
+    })
+    const deleteNomination = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: nom[0].id,
+        user_id: this.state.user.id
+      })
+    }
+    fetch(`${API_Nominations}/${nom[0].id}`, deleteNomination)
+      .then(resp => resp.json())
+      .then(data => {
+        this.setState({
+          nominations: data.nominations,
+          myMovies: data.my_movies
+        })
+      })
+      .catch(err => console.log(err))
+  }
+
+  handleLogout = () => {
+    if (this.state.user.id) {
+      this.setState({
+        user: '',
+        myMovies: []
+      })
+      localStorage.clear()
+    }
+  }
+
+  closeUserModal = () => {
+    this.setState({
+      noUserModal: false
+    })
+  }
+
+  closeNumberModal = () => {
+    this.setState({
+      nominationNumberModal: false
+    })
+  }
+
   render() {
-    console.log(this.state.user)
     return (
-      <Router history={history}>
-        <div>
-          <Navbar />
-          <Switch>
-            <Route exact path='/' render={routerProps => <Home {...routerProps}
-              nominateMovie={this.nominateMovie} />} />
-            <Route exact path='/list' render={routerProps => <NominationList {...routerProps} />} />
-            <Route exact path='/login' render={routerProps => <Login {...routerProps}
-              loginUser={this.loginUser} />} />
-            <Route exact path='/signup' render={routerProps => <SignUp {...routerProps}
-              loginUser={this.loginUser} />} />
-          </Switch>
-        </div>
-      </Router>
+      <div>
+        <Navbar
+          handleLogout={this.handleLogout}
+          user={this.state.user} />
+        <Switch>
+          <Route exact path='/' render={routerProps => <Home {...routerProps}
+            nominateMovie={this.nominateMovie}
+            user={this.state.user}
+            nominations={this.state.nominations}
+            movies={this.state.movies}
+            myMovies={this.state.myMovies}
+            removeNomination={this.removeNomination}
+            noUserModal={this.state.noUserModal}
+            closeUserModal={this.closeUserModal}
+            nominationNumberModal={this.state.nominationNumberModal}
+            closeNumberModal={this.closeNumberModal} />} />
+          <Route path='/list' render={routerProps => <NominationList {...routerProps}
+            movies={this.state.movies}
+            nominations={this.state.nominations} />} />
+          <Route path='/login' render={routerProps => <Login {...routerProps}
+            loginUser={this.loginUser} />} />
+          <Route path='/signup' render={routerProps => <SignUp {...routerProps}
+            loginUser={this.loginUser} />} />
+        </Switch>
+      </div>
     );
   }
 }
